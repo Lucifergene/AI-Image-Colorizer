@@ -1,0 +1,37 @@
+name: Docker Image Builder
+
+on: 
+  push:
+    branches: [ main ]
+
+jobs:
+
+  buildndeploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest    
+    
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v1.1.0
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ secrets.DOCKER_USER }}/daemon
+          tags: ${{ github.sha }}, latest
+          
+      - name: heroku login
+        env: 
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:login         
+      
+      - name: Build and push heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web 
+        
+      - name: Release heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web
