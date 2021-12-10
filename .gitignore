@@ -6,6 +6,7 @@
 /README.md
 /__pycache__/*
 /.gitignore
-/model/colorization_release_v2.caffemodel
+/model/down/colorization_release_v2.caffemodel
 /uploads/image.*
 /static/converts/converted.*
+/.vscode/*

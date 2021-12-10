@@ -14,9 +14,6 @@ api = Api(app)
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
-# op = subprocess.run(['bash','down.sh'],check=True,stdout=subprocess.PIPE).stdout.decode('utf-8')
-# print(op)
-
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -90,12 +87,8 @@ class Prediction_API(Resource):
         args = parse.parse_args()
         image_file = args['file']
         image_file.save("./uploads/image.png")
-        # imwholeg = np.array(image_file)
         image = cv2.imread('./uploads/image.png', cv2.IMREAD_COLOR)
-        
-        
-        # image = cv2.imdecode(imwholeg, cv2.IMREAD_COLOR)
-        # print("Hellor:", type(image))
+
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
 
